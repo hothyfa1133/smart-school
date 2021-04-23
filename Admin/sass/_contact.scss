@@ -1,0 +1,24 @@
+.contacting-card {
+    .icons-container {
+        position: absolute;
+        right: 8px;
+        bottom: 6px;
+        i{
+            cursor: pointer;
+            font-size: 15px;
+        }
+        i.fa-trash{
+            color: #e82f41db;
+            margin-right: 5px;
+        }
+    }
+    .info-panel{
+        display: none;
+        right: 10px;
+        font-size: 14px;
+    }
+    &:hover .info-panel{
+        display: block;
+        transition: .4s;
+    }
+}

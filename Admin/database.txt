@@ -1,0 +1,38 @@
+// Admin Panel DataBase
+
+- DataBase Name => smart_school
+- All Tables, Columns are written as lower_case
+- id in all tables refers to record_id
+- date in any table refers to created_date of row
+
+- Subjects Table
+    - Contains 2 Columns
+    - Columns: (id, subject)
+
+- Contact Table
+    - Contains 7 Columns
+    - Columns: (id, f_name, l_name, email, phone, comment, date)
+
+- Courses Table
+    - Contains 7 Columns
+    - Columns: (id, grade, teacher, image, title, description, date)
+
+- News Table
+    - Contains 5 Columns
+    - Columns: (id, image, title, description, date)
+    
+- Teachers Table
+    - Contains 12 Columns
+    - Columns: (id, name, image, subject, phone, email, password, gender, fb_link, position, visibility, date)
+    
+- Students Table
+    - Contains 8 Columns
+    - Columns: (id, name, studens_id, email, grade, password, birth_date, date)
+
+- Exams Table
+    - Contains 8 Columns
+    - Columns: (id, name, at, duration, grade, subject, teacher, date)
+
+- Marks Table
+    - Containe 7 Columns
+    - Columns: (id, student, mark, full_mark, subject, teacher, date)

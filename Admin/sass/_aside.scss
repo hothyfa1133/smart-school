@@ -1,0 +1,36 @@
+aside.main-aside{
+    background-color: $green;
+    color: $white;
+    width: 238px;
+    height: 100%;
+    z-index: 555;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    .admin-box{
+        overflow: hidden;
+        div.image{
+            float: left;
+            img{
+                width: 60px;
+                max-height: 80px;
+                margin-right: 15px;
+            }
+        }
+    }
+    ul{
+        li{
+            margin-bottom: 8px;
+            span.material-icons{
+                position: relative;
+                top: 4px;
+                left: -4px;
+                font-size: 21px;
+            }
+        }
+        li.active{
+            color: #FFEC67;
+        }
+    }
+}

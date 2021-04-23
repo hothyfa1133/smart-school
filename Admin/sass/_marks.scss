@@ -1,0 +1,22 @@
+ul.student-hints{
+    background-color: #e9f2ff;
+    padding: 0px;
+    margin-top: 0px;
+    width: 100%;
+    border-top: none !important;
+    border-top-right-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+    li{
+        padding: 8px;
+        border-bottom: 1px solid #cecece73;
+        cursor: pointer;
+        border-radius: 5px;
+        &:hover{
+            background-color: #ddebff;
+            transition: .1s;
+        }
+    }
+    li:last-of-type{
+        border-bottom: 0px !important;
+    }
+}

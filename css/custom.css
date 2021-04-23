@@ -1,0 +1,33 @@
+
+/** ADD YOUR AWESOME CODES HERE **/
+
+.main-user-messages{
+    position: fixed;
+    bottom: 0px;
+    right: 18px;
+    z-index: 55555;
+}
+
+.btn.focus, .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0px #0000;
+}
+
+.page-links{
+    font-size: 15px;
+}
+
+.page-links a, .page-links a:hover{
+    color: inherit;
+}
+.page-links ul li{
+    border-bottom: 1px solid #eee;
+    padding: 5px 0px;
+}
+.page-links li:last-of-type{
+    border-bottom: 0px;
+    padding-bottom: 0px;
+}
+.page-links li.active{
+    color: var(--danger);
+}
