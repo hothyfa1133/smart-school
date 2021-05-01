@@ -7,7 +7,11 @@ $(function () {
         e.stopPropagation();
     });
 
-    $("small.err-msg").addClass("form-text text-danger mark");
+    $("small.mark").removeClass('mark');
 
     $("label").addClass("form-label");
-})
+});
+
+window.onload = function () {
+    document.querySelector('div.loader:first-of-type').style.display = 'none';
+}

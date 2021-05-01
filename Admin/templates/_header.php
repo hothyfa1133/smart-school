@@ -28,8 +28,60 @@ ob_start();
 
     <!-- Scripts -->
     <script src="js/jquery.js"></script>
+
+    <style>
+        @keyframes loader {
+            from{
+                transform: rotate(0deg);
+            }
+            to{
+                transform: rotate(360deg);
+            }
+        }
+        .loader{
+            position: fixed;
+            top: 0px;
+            bottom: 0px;
+            right: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: #f3f3f3;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .loader div{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #1e85de;
+            position: absolute;
+            animation: loader 1s infinite linear;
+            border-right: 3px solid #0000;
+        }
+        .loader div:nth-of-type(2){
+            width: 60px;
+            height: 60px;
+            animation-duration: 1.5s;
+        }
+        .loader div:last-of-type{
+            width: 70px;
+            height: 70px;
+            animation-duration: 2s;
+        }
+    </style>
 </head>
 <body>
+
+    <div class="loader">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
    <?php
     // including aside
     if(!isset($noAside)){

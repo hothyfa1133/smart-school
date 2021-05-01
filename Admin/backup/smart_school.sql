@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 03, 2021 at 05:55 PM
+-- Generation Time: Apr 24, 2021 at 12:22 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.1
 
@@ -20,20 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `smart_school`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `admins`
---
-
-CREATE TABLE `admins` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(150) NOT NULL,
-  `date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -81,10 +67,59 @@ CREATE TABLE `courses` (
 --
 
 INSERT INTO `courses` (`id`, `grade`, `teacher`, `image`, `title`, `description`, `date`) VALUES
-(1, 9, 1, '35955_Recent News.png', 'Programming Course', 'Introduction To PHP And MYSQL', '2021-03-30'),
-(3, 7, 2, '39196_Edit Student.png', 'Html, Css Courses', 'Introduction To Front End Pathing', '2021-03-31'),
 (6, 8, 2, '15578_Add Course.png', 'Gramer Course', 'Arabic Grammer Explaination', '2021-04-02'),
-(7, 7, 1, '51604_All Teachers.png', 'Ai Course', 'Artifficial Intelligence Course', '2021-04-02');
+(9, 9, 3, '8321_a.jpg', 'Hello Test', 'Testing Number NULL', '2021-04-17');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `exams`
+--
+
+CREATE TABLE `exams` (
+  `id` int(11) NOT NULL,
+  `name` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `at` datetime NOT NULL,
+  `duration` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `grade` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subject` int(11) NOT NULL,
+  `teacher` int(11) NOT NULL,
+  `date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `exams`
+--
+
+INSERT INTO `exams` (`id`, `name`, `at`, `duration`, `grade`, `subject`, `teacher`, `date`) VALUES
+(1, 'Grammer Exam', '2021-04-21 07:00:00', '60', '8', 1, 2, '2021-04-15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `marks`
+--
+
+CREATE TABLE `marks` (
+  `id` int(11) NOT NULL,
+  `student` int(11) NOT NULL,
+  `mark` float NOT NULL,
+  `full_mark` float NOT NULL,
+  `subject` int(11) NOT NULL,
+  `teacher` int(11) NOT NULL,
+  `date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `marks`
+--
+
+INSERT INTO `marks` (`id`, `student`, `mark`, `full_mark`, `subject`, `teacher`, `date`) VALUES
+(1, 5, 90, 100, 2, 4, '2021-04-09'),
+(3, 2, 14, 10, 4, 9, '2021-04-20'),
+(5, 5, 40, 50, 1, 4, '2021-05-07'),
+(6, 5, 20, 100, 1, 4, '2021-04-21'),
+(7, 4, 45, 100, 4, 4, '2021-04-21');
 
 -- --------------------------------------------------------
 
@@ -105,7 +140,7 @@ CREATE TABLE `news` (
 --
 
 INSERT INTO `news` (`id`, `image`, `title`, `description`, `date`) VALUES
-(1, '77436_Students.png', 'Hello, World', 'Finally, The Website Has Done\r\nThanks God.', '2021-04-02');
+(3, '44020_blog_1.jpg', 'New Year Has gone', 'Hello, New Years', '2021-04-08');
 
 -- --------------------------------------------------------
 
@@ -132,7 +167,9 @@ INSERT INTO `students` (`id`, `name`, `student_id`, `email`, `grade`, `password`
 (1, 'Ashraf Amr', '221', 'ashraf55@gmail.com', '7', '63abb446cc2c3d7332fce71f513d860b656de555', '2021-12-31', '2021-04-02'),
 (2, 'Ashraf Elsaket', '222', 'ashraf22@gmail.com', '8', '10a51906d5e08f212aa06b190df4d30c8124ed78', '2004-06-06', '2021-04-02'),
 (3, 'Menna Elsoht', '223', 'menna55@gmail.com', '9', 'bb8d916b93288c24137a20c5d99da8cc861bd348', '2005-09-04', '2021-04-02'),
-(4, 'Mohamed Osama', '224', 'mohamed@gmail.com', '7', '0436b2b49085eb8f93a4180557859e7b4aa35a92', '2008-05-05', '2021-04-02');
+(4, 'Mohamed Osama', '224', 'mohamed@gmail.com', '7', '0436b2b49085eb8f93a4180557859e7b4aa35a92', '2008-05-05', '2021-04-02'),
+(5, 'Mahmoud Reda', '044', 'mm22@mm.com', '8', '0375c0ba89621a0a7552eedf34e67f5df3de2f99', '2021-12-31', '2021-04-19'),
+(6, 'Ahmed Saleh', '445', 'ahmedsaleh22@gmail.com', '7', 'a9d28c502c3933142266af4cb8685ce66ca10254', '2008-02-28', '2021-04-21');
 
 -- --------------------------------------------------------
 
@@ -151,10 +188,9 @@ CREATE TABLE `subjects` (
 
 INSERT INTO `subjects` (`id`, `subject`) VALUES
 (1, 'Arabic'),
-(2, 'English'),
-(3, 'Maths'),
-(4, 'French'),
-(5, 'Programming');
+(2, 'Maths'),
+(3, 'Programming'),
+(4, 'Chemistry');
 
 -- --------------------------------------------------------
 
@@ -166,12 +202,14 @@ CREATE TABLE `teachers` (
   `id` int(11) NOT NULL,
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `image` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `subject` int(11) NOT NULL,
+  `subject` int(11) DEFAULT NULL,
   `phone` varchar(11) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(150) NOT NULL,
   `gender` tinyint(1) NOT NULL,
   `fb_link` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `position` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0 is teacher 1 is admin',
+  `visibility` tinyint(4) NOT NULL DEFAULT 1 COMMENT ' 0 is invisible, 1 is visible',
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -179,10 +217,13 @@ CREATE TABLE `teachers` (
 -- Dumping data for table `teachers`
 --
 
-INSERT INTO `teachers` (`id`, `name`, `image`, `subject`, `phone`, `email`, `password`, `gender`, `fb_link`, `date`) VALUES
-(1, 'Mahmoud Reda', '46560_testi_02.png', 5, '01093668888', 'mahmodreda219@gmail.com', '0375c0ba89621a0a7552eedf34e67f5df3de2f99', 0, 'https://facebook.com/mahmodreda66', '2021-03-30'),
-(2, 'Ahmed Saleh', '76864_avatar-01.jpg', 1, '01274445858', 'ahmedsaleh219@gmil.com', '3fff862ca2197989ab069e166a86e94b35a8fe89', 0, 'https://facebook.com/ahmedsaleh55', '2021-03-30'),
-(3, 'Mohamed Farag', '', 2, '01244747899', 'hossam22arag@gmail.com', 'c08673fd85f9b213afb87151264120c84316302e', 0, '', '2021-04-02');
+INSERT INTO `teachers` (`id`, `name`, `image`, `subject`, `phone`, `email`, `password`, `gender`, `fb_link`, `position`, `visibility`, `date`) VALUES
+(2, 'Ahmed Saleh', '76864_avatar-01.jpg', 1, '01274445858', 'ahmedsaleh219@gmil.com', '3fff862ca2197989ab069e166a86e94b35a8fe89', 0, 'https://facebook.com/ahmedsaleh55', 0, 1, '2021-03-30'),
+(3, 'Mohamed Farag', '', 2, '01244747899', 'hossam22@gmail.com', '0375c0ba89621a0a7552eedf34e67f5df3de2f99', 0, '', 0, 1, '2021-04-02'),
+(4, 'Mahmoud Reda', '11894_testi_02.png', NULL, '01093668025', 'mahmodreda219@gmail.com', '0375c0ba89621a0a7552eedf34e67f5df3de2f99', 0, 'https://facebook.com/mahmoudreda66', 1, 0, '2021-04-04'),
+(5, 'Ahmed Hesham', '', 2, '01244747789', 'ahmed@gmail.com', '3fff862ca2197989ab069e166a86e94b35a8fe89', 0, '', 0, 1, '2021-04-14'),
+(9, 'Teacher Name', '40371_a.jpg', 4, '01244557899', 'teacher@school.com', '0375c0ba89621a0a7552eedf34e67f5df3de2f99', 0, 'https://facebook.com/teacher', 0, 1, '2021-04-14'),
+(10, 'Hothayfa Suliman', '', NULL, '020441145', 'hothayfa@gmail.com', 'dd94709528bb1c83d08f3088d4043f4742891f4f', 0, '', 1, 0, '2021-04-24');
 
 --
 -- Indexes for dumped tables
@@ -201,6 +242,23 @@ ALTER TABLE `contact`
 ALTER TABLE `courses`
   ADD PRIMARY KEY (`id`),
   ADD KEY `teacher` (`teacher`);
+
+--
+-- Indexes for table `exams`
+--
+ALTER TABLE `exams`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `subject` (`subject`),
+  ADD KEY `teacher` (`teacher`);
+
+--
+-- Indexes for table `marks`
+--
+ALTER TABLE `marks`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `student` (`student`,`mark`,`subject`,`teacher`),
+  ADD KEY `teacher` (`teacher`),
+  ADD KEY `subject` (`subject`);
 
 --
 -- Indexes for table `news`
@@ -238,25 +296,37 @@ ALTER TABLE `teachers`
 -- AUTO_INCREMENT for table `contact`
 --
 ALTER TABLE `contact`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `exams`
+--
+ALTER TABLE `exams`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `marks`
+--
+ALTER TABLE `marks`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `subjects`
@@ -268,7 +338,7 @@ ALTER TABLE `subjects`
 -- AUTO_INCREMENT for table `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
@@ -279,6 +349,21 @@ ALTER TABLE `teachers`
 --
 ALTER TABLE `courses`
   ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`teacher`) REFERENCES `teachers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `exams`
+--
+ALTER TABLE `exams`
+  ADD CONSTRAINT `exams_ibfk_1` FOREIGN KEY (`subject`) REFERENCES `subjects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `exams_ibfk_2` FOREIGN KEY (`teacher`) REFERENCES `teachers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `marks`
+--
+ALTER TABLE `marks`
+  ADD CONSTRAINT `marks_ibfk_1` FOREIGN KEY (`student`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `marks_ibfk_2` FOREIGN KEY (`teacher`) REFERENCES `teachers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `marks_ibfk_3` FOREIGN KEY (`subject`) REFERENCES `subjects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `teachers`
