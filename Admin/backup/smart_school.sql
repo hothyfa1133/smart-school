@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 24, 2021 at 12:22 AM
+-- Generation Time: May 01, 2021 at 05:23 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.1
 
@@ -222,7 +222,7 @@ INSERT INTO `teachers` (`id`, `name`, `image`, `subject`, `phone`, `email`, `pas
 (3, 'Mohamed Farag', '', 2, '01244747899', 'hossam22@gmail.com', '0375c0ba89621a0a7552eedf34e67f5df3de2f99', 0, '', 0, 1, '2021-04-02'),
 (4, 'Mahmoud Reda', '11894_testi_02.png', NULL, '01093668025', 'mahmodreda219@gmail.com', '0375c0ba89621a0a7552eedf34e67f5df3de2f99', 0, 'https://facebook.com/mahmoudreda66', 1, 0, '2021-04-04'),
 (5, 'Ahmed Hesham', '', 2, '01244747789', 'ahmed@gmail.com', '3fff862ca2197989ab069e166a86e94b35a8fe89', 0, '', 0, 1, '2021-04-14'),
-(9, 'Teacher Name', '40371_a.jpg', 4, '01244557899', 'teacher@school.com', '0375c0ba89621a0a7552eedf34e67f5df3de2f99', 0, 'https://facebook.com/teacher', 0, 1, '2021-04-14'),
+(9, 'Teacher Name', '46911_a.jpg', 2, '01244557897', 'teacher@school.com', '0375c0ba89621a0a7552eedf34e67f5df3de2f99', 1, 'https://facebook.com/teacher', 0, 1, '2021-04-14'),
 (10, 'Hothayfa Suliman', '', NULL, '020441145', 'hothayfa@gmail.com', 'dd94709528bb1c83d08f3088d4043f4742891f4f', 0, '', 1, 0, '2021-04-24');
 
 --
@@ -272,7 +272,9 @@ ALTER TABLE `news`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`,`student_id`,`email`,`birth_date`);
+  ADD UNIQUE KEY `name` (`name`,`student_id`,`email`,`birth_date`),
+  ADD UNIQUE KEY `student_id` (`student_id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `subjects`
@@ -285,6 +287,8 @@ ALTER TABLE `subjects`
 --
 ALTER TABLE `teachers`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `phone` (`phone`),
+  ADD UNIQUE KEY `email` (`email`),
   ADD UNIQUE KEY `name` (`name`,`subject`,`phone`,`email`),
   ADD KEY `subject` (`subject`);
 
