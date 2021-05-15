@@ -26,8 +26,8 @@
     - Columns: (id, name, image, subject, phone, email, password, gender, fb_link, position, visibility, date)
     
 - Students Table
-    - Contains 8 Columns
-    - Columns: (id, name, studens_id, email, grade, password, birth_date, date)
+    - Contains 9 Columns
+    - Columns: (id, name, studens_id, email, grade, password, birth_date, status, date)
 
 - Exams Table
     - Contains 8 Columns
@@ -36,3 +36,7 @@
 - Marks Table
     - Containe 7 Columns
     - Columns: (id, student, mark, full_mark, subject, teacher, date)
+
+- Courses_Videos Table
+    - Containe 6 Columns
+    - Columns: (id, link, course, title, description, date)

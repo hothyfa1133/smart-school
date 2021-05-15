@@ -338,7 +338,7 @@ function getMark ($id) {
 															<div class="col-md-6 col-12 mb-3 mb-md-0">
 																<label for="mark">Mark</label>
 																<input value="<?php echo $mark['mark'] . '/' . $mark['full_mark'];?>" type="text" placeholder="Separate The Grade And The Total Score By '/'" class="form-control" name="mark" id="mark">
-																<small class="form-text mark">example: 90/100</small>
+																<small class="form-text marks">example: 90/100</small>
 															</div>
 															<?php
 															$position = getAdmin()['position'];
@@ -392,33 +392,6 @@ function getMark ($id) {
 															<button class="btn btn-success" name="update">Update</button>
 														</div>
 													</form>
-													<script>
-														const form = document.getElementById('edit-mark');
-														form.onsubmit = function (e) {
-															let mark = form.querySelector('input#mark'),
-        													    subject = form.querySelector('select#subject');
-
-																if(mark.value.match(/[0-9]{1,3}\/[0-9]{1,3}/g) === null){
-																	e.preventDefault();
-																	mark.focus();
-																	mark.classList.add('input-alert');
-																	form.querySelector('small.mark').classList.add('text-danger');
-																}else{
-																	mark.classList.remove('input-alert');
-																	form.querySelector('small.mark').classList.remove('text-danger');
-
-																	if(subject.value === 'NULL'){
-																		e.preventDefault();
-																		subject.focus();
-																		subject.classList.add('input-alert');
-																		form.querySelector('small.subject').textContent = 'Choose Subject';
-																	}else{
-																		subject.classList.remove('input-alert');
-																		form.querySelector('small.subject').classList.remove('text-danger');
-																	}
-																}
-														}
-													</script>
 												</div>
 											</div>
 										</div>

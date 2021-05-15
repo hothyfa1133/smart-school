@@ -14,7 +14,7 @@ function setLogin () {
 	$password = trim(htmlentities($_POST['password']));
 
 	$checkStmt = $conn->prepare("SELECT
-		id
+		id, status
 		FROM
 		students
 		WHERE
@@ -22,11 +22,15 @@ function setLogin () {
 	$checkStmt->execute([$email, sha1($password)]);
 
 	if($checkStmt->rowCount() > 0){ // found
-
 		$student = $checkStmt->fetch();
-		$_SESSION['smart_school_user'] = $student['id'];
-		$_SESSION['smart_school_position'] = 0;
-		header("location:index.php");
+
+		if($student['status'] == 0){ // unactivate
+			echo message('Your Email Has Not Activated Succesfully');
+		}else{
+			$_SESSION['smart_school_user'] = $student['id'];
+			$_SESSION['smart_school_position'] = 0;
+			header("location:index.php");
+		}
 
 	}else{ // not found
 
@@ -82,9 +86,9 @@ function addStudent () {
             (?, ?, ?, ?, ?, ?, NOW())");
             $addStudent->execute([$name, $email, $grade, $student_id, $date, sha1($password)]);
             if($addStudent->rowCount() > 0){ // success
-                echo message("student has added succesfully", true);
+                echo message("Your Account Has Added Succesfully, Wait Activation", true);
             }else{
-                echo message("student hasn't add succesfully");
+                echo message("Your Account Has Not Added Succesfully");
             }
         }
         catch(PDOException $e){

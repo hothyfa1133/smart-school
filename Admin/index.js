@@ -9,6 +9,8 @@ $(function () {
 
     $("small.mark").removeClass('mark');
 
+    $('small.err-msg').addClass('text-danger');
+
     $("label").addClass("form-label");
 });
 

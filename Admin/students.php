@@ -116,9 +116,9 @@ function addStudent () {
             $addStudent = $conn->prepare("INSERT
             INTO
             students
-            (name, email, grade, student_id, birth_date, password, date)
+            (name, email, grade, student_id, birth_date, password, status, date)
             VALUES
-            (?, ?, ?, ?, ?, ?, NOW())");
+            (?, ?, ?, ?, ?, ?, 1, NOW())");
             $addStudent->execute([$name, $email, $grade, $student_id, $date, sha1($password)]);
             if($addStudent->rowCount() > 0){ // success
                 echo message("student has added succesfully", true);

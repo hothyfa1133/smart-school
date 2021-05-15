@@ -16,7 +16,7 @@ function getAdmin () {
 }
 
 // get teacher by id function
-function getTeacher ($id) {
+function getTeacherInfo($id) {
     global $conn;
     
     // get teacher by id
@@ -35,7 +35,7 @@ function getTeacher ($id) {
 }
 
 // get subjects function
-function getSubjects () {
+function getTSubjects() {
     global $conn;
     
     // get all subjects
@@ -53,7 +53,7 @@ function getSubjects () {
 }
 
 // update teacher function
-function updateTeacher () {
+function updateTeacherInfo () {
     global $conn;
     
     // validate inputs
@@ -171,11 +171,11 @@ if(getAdmin()['position'] == 0){
     // handling post requests
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         if(array_key_exists('edit-teacher-form-no-admin', $_POST)){
-            updateTeacher();
+            updateTeacherInfo();
         }
     }
 
-    $teacher = getTeacher($_SESSION['smart_school_id']);
+    $teacher = getTeacherInfo($_SESSION['smart_school_id']);
     ?>
     <div class="modal" tabindex="-1" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -223,10 +223,10 @@ if(getAdmin()['position'] == 0){
                                 <select name="subject" id="subject" class="form-select">
                                     <option value="NULL" disabled>Choose Subject</option>
                                     <?php
-                                    if(getSubjects() != 0){ // not empty result
+                                    if(getTSubjects() != 0){ // not empty result
 
                                         // loop on result
-                                        foreach(getSubjects() as $subject){
+                                        foreach(getTSubjects() as $subject){
                                             ?>
                                             <option <?php if($subject['id'] === $teacher['subject']){echo 'selected';}?> value="<?php echo $subject['id'];?>"><?php echo $subject['subject'];?></option>
                                             <?php
@@ -401,6 +401,12 @@ if(getAdmin()['position'] == 0){
                     Dashboard
                 </a>
             </li>
+            <li <?php if(isset($pageName) && $pageName === "activation"){echo 'class="active"';}?>>
+               <a href="activation.php">
+                   <span class="material-icons">check</span>
+                    Activation Requests
+               </a>
+            </li>
             <li <?php if(isset($pageName) && $pageName === "courses"){echo 'class="active"';}?>>
                <a href="courses.php">
                    <span class="material-icons">class</span>
@@ -447,12 +453,6 @@ if(getAdmin()['position'] == 0){
                <a href="contact.php">
                    <span class="material-icons">contact_support</span>
                     Contact
-               </a>
-            </li>
-            <li <?php if(isset($pageName) && $pageName === "database"){echo 'class="active"';}?>>
-               <a href="database.php">
-                   <span class="material-icons">storage</span>
-                    Database
                </a>
             </li>
             <?php
