@@ -1106,7 +1106,9 @@ function getVideo($video)
                                                 <a href="<?php echo $_SERVER['PHP_SELF'] . '?page=' . $_GET['page'] . '&limit=' . $_GET['limit'] . '&order=' . $_GET['order'] . '&edit=' . $video['id']; ?>">
                                                     <i class="fas fa-edit text-success mx-1" title="Edit"></i>
                                                 </a>
-                                                <i data-video="<?php echo $video['link']; ?>" class="cursor-pointer show-video fas fa-eye text-info" title="Show"></i>
+                                                <a href="<?php echo $video['link'];?>" target="_blank">
+                                                    <i data-video="<?php echo $video['link']; ?>" class="cursor-pointer show-video fas fa-eye text-info" title="Show"></i>
+                                                </a>
                                             </small>
                                         </td>
                                     </tr>
