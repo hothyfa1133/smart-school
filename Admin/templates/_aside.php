@@ -482,6 +482,12 @@ if(getAdmin()['position'] == 0){
                     Exams
                </a>
             </li>
+            <li <?php if(isset($pageName) && $pageName === "courses"){echo 'class="active"';}?>>
+               <a href="courses.php?page=courses_videos">
+                   <span class="material-icons">play_circle</span>
+                    Courses Videos
+               </a>
+            </li>
             <?php
         }
         ?>

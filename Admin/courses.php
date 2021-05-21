@@ -1,5 +1,5 @@
 <?php
-$forAdmin = true;
+// $forAdmin = true;
 $pageName = 'courses';
 require 'includes/init.php';
 
@@ -470,16 +470,22 @@ function getVideo($video)
         <div class="col-lg-3 col-md-4 col-12 mb-3 mb-md-0">
             <div class="bg-white rounded border p-2 page-links">
                 <ul class="list-unstyled pe-0 mb-0">
-                    <li <?php if ($_GET['page'] === 'courses') {
-                            echo 'class="active"';
-                        } ?>>
-                        <a href="<?php echo $_SERVER['PHP_SELF'] . '?page=courses'; ?>">All Courses</a>
-                    </li>
-                    <li <?php if ($_GET['page'] === 'add_course') {
-                            echo 'class="active"';
-                        } ?>>
-                        <a href="<?php echo $_SERVER['PHP_SELF'] . '?page=add_course'; ?>">Add Course</a>
-                    </li>
+                    <?php
+                    if (getAdmin()['position'] == 1) {
+                    ?>
+                        <li <?php if ($_GET['page'] === 'courses') {
+                                echo 'class="active"';
+                            } ?>>
+                            <a href="<?php echo $_SERVER['PHP_SELF'] . '?page=courses'; ?>">All Courses</a>
+                        </li>
+                        <li <?php if ($_GET['page'] === 'add_course') {
+                                echo 'class="active"';
+                            } ?>>
+                            <a href="<?php echo $_SERVER['PHP_SELF'] . '?page=add_course'; ?>">Add Course</a>
+                        </li>
+                    <?php
+                    }
+                    ?>
                     <li <?php if ($_GET['page'] === 'courses_videos') {
                             echo 'class="active"';
                         } ?>>
@@ -530,399 +536,406 @@ function getVideo($video)
                 <?php
                 if ($_GET['page'] === 'courses') { // courses page
 
-                    // handling post requests
-                    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                        if (array_key_exists("edit_course", $_POST)) { // update course request
-                            updateCourse();
-                        } else if (array_key_exists("delete_id", $_POST)) {
+                    if (getAdmin()['position'] == 1) {
+                        // handling post requests
+                        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                            if (array_key_exists("edit_course", $_POST)) { // update course request
+                                updateCourse();
+                            } else if (array_key_exists("delete_id", $_POST)) {
 
-                            // get image and delete it
-                            $getImage = $conn->prepare("SELECT
+                                // get image and delete it
+                                $getImage = $conn->prepare("SELECT
                                 image
                                 FROM
                                 courses
                                 WHERE
                                 id = ?");
-                            $getImage->execute([$_POST['delete_id']]);
-                            $d_image = $getImage->fetchColumn();
-                            if (file_exists("../images/courses/" . $d_image)) {
-                                @unlink("../images/courses/" . $d_image);
-                            }
+                                $getImage->execute([$_POST['delete_id']]);
+                                $d_image = $getImage->fetchColumn();
+                                if (file_exists("../images/courses/" . $d_image)) {
+                                    @unlink("../images/courses/" . $d_image);
+                                }
 
-                            $deleteStmt = $conn->prepare("DELETE
+                                $deleteStmt = $conn->prepare("DELETE
                             FROM
                             courses
                             WHERE
                             id = ?");
-                            $deleteStmt->execute([$_POST['delete_id']]);
+                                $deleteStmt->execute([$_POST['delete_id']]);
+                            }
                         }
-                    }
 
-                    // check if is set edit course in get request
-                    if (isset($_GET['edit'])) {
-                        if (is_numeric($_GET['edit'])) {
-                            $course = getCourse($_GET['edit']);
-                            if ($course !== 0) { // found
+                        // check if is set edit course in get request
+                        if (isset($_GET['edit'])) {
+                            if (is_numeric($_GET['edit'])) {
+                                $course = getCourse($_GET['edit']);
+                                if ($course !== 0) { // found
                 ?>
-                                <div class="full-page">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-8 col-12 mx-md-auto content">
-                                                <div class="bg-white rounded border p-3">
-                                                    <h6 class="main">Edit Course</h6>
-                                                    <form action="<?php echo $_SERVER['PHP_SELF'] . '?page=' . $_GET['page'] . '&limit=' . $_GET['limit'] . '&order=' . $_GET['order']; ?>" method="post" id="edit-course" enctype="multipart/form-data">
-                                                        <input type="hidden" name="id" value="<?php echo $_GET['edit']; ?>">
-                                                        <input type="hidden" name="old_image" value="<?php echo $course['image']; ?>">
-                                                        <div class="row">
-                                                            <div class="col-md-6 col-12 mb-3 mb-md-0">
-                                                                <label for="grade">Grade</label>
-                                                                <select name="grade" id="grade" class="form-select">
-                                                                    <option value="NULL" disabled>Choose One</option>
-                                                                    <option value="7" <?php if ($course['grade'] == '7') {
-                                                                                            echo 'selected';
-                                                                                        } ?>>Grade 7</option>
-                                                                    <option value="8" <?php if ($course['grade'] == '8') {
-                                                                                            echo 'selected';
-                                                                                        } ?>>Grade 8</option>
-                                                                    <option value="9" <?php if ($course['grade'] == '9') {
-                                                                                            echo 'selected';
-                                                                                        } ?>>Grade 9</option>
-                                                                </select>
-                                                                <small class="err-msg grade"></small>
-                                                            </div>
-                                                            <div class="col-md-6 col-12 mb-3 mb-md-0">
-                                                                <label for="teacher">Teacher</label>
-                                                                <select name="teacher" id="teacher" class="form-select">
-                                                                    <option value="NULL" disabled>Choose One</option>
-                                                                    <?php
-                                                                    $teachers = getTeachers();
-                                                                    if ($teachers !== 0) { // not empty result
+                                    <div class="full-page">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-8 col-12 mx-md-auto content">
+                                                    <div class="bg-white rounded border p-3">
+                                                        <h6 class="main">Edit Course</h6>
+                                                        <form action="<?php echo $_SERVER['PHP_SELF'] . '?page=' . $_GET['page'] . '&limit=' . $_GET['limit'] . '&order=' . $_GET['order']; ?>" method="post" id="edit-course" enctype="multipart/form-data">
+                                                            <input type="hidden" name="id" value="<?php echo $_GET['edit']; ?>">
+                                                            <input type="hidden" name="old_image" value="<?php echo $course['image']; ?>">
+                                                            <div class="row">
+                                                                <div class="col-md-6 col-12 mb-3 mb-md-0">
+                                                                    <label for="grade">Grade</label>
+                                                                    <select name="grade" id="grade" class="form-select">
+                                                                        <option value="NULL" disabled>Choose One</option>
+                                                                        <option value="7" <?php if ($course['grade'] == '7') {
+                                                                                                echo 'selected';
+                                                                                            } ?>>Grade 7</option>
+                                                                        <option value="8" <?php if ($course['grade'] == '8') {
+                                                                                                echo 'selected';
+                                                                                            } ?>>Grade 8</option>
+                                                                        <option value="9" <?php if ($course['grade'] == '9') {
+                                                                                                echo 'selected';
+                                                                                            } ?>>Grade 9</option>
+                                                                    </select>
+                                                                    <small class="err-msg grade"></small>
+                                                                </div>
+                                                                <div class="col-md-6 col-12 mb-3 mb-md-0">
+                                                                    <label for="teacher">Teacher</label>
+                                                                    <select name="teacher" id="teacher" class="form-select">
+                                                                        <option value="NULL" disabled>Choose One</option>
+                                                                        <?php
+                                                                        $teachers = getTeachers();
+                                                                        if ($teachers !== 0) { // not empty result
 
-                                                                        // loop in result
-                                                                        foreach ($teachers as $teacher) {
-                                                                    ?>
-                                                                            <option <?php if ($teacher['id'] == $course['teacher']) {
-                                                                                        echo 'selected';
-                                                                                    } ?> value="<?php echo $teacher['id']; ?>"><?php echo $teacher['name']; ?></option>
-                                                                    <?php
+                                                                            // loop in result
+                                                                            foreach ($teachers as $teacher) {
+                                                                        ?>
+                                                                                <option <?php if ($teacher['id'] == $course['teacher']) {
+                                                                                            echo 'selected';
+                                                                                        } ?> value="<?php echo $teacher['id']; ?>"><?php echo $teacher['name']; ?></option>
+                                                                        <?php
+                                                                            }
                                                                         }
-                                                                    }
-                                                                    ?>
-                                                                </select>
-                                                                <small class="err-msg teacher"></small>
+                                                                        ?>
+                                                                    </select>
+                                                                    <small class="err-msg teacher"></small>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row mt-3">
-                                                            <div class="col-12">
-                                                                <label for="title">Title</label>
-                                                                <input type="text" name="title" placeholder="Title Of The Course" id="title" class="form-control" autocomplete="off" value="<?php echo $course['title']; ?>">
-                                                                <small class="err-msg title"></small>
+                                                            <div class="row mt-3">
+                                                                <div class="col-12">
+                                                                    <label for="title">Title</label>
+                                                                    <input type="text" name="title" placeholder="Title Of The Course" id="title" class="form-control" autocomplete="off" value="<?php echo $course['title']; ?>">
+                                                                    <small class="err-msg title"></small>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row mt-3">
-                                                            <div class="col-12">
-                                                                <label for="description">Description</label>
-                                                                <textarea name="description" id="description" cols="30" rows="5" class="form-control" placeholder="Description Of The Course"><?php echo $course['description']; ?></textarea>
-                                                                <small class="err-msg description"></small>
+                                                            <div class="row mt-3">
+                                                                <div class="col-12">
+                                                                    <label for="description">Description</label>
+                                                                    <textarea name="description" id="description" cols="30" rows="5" class="form-control" placeholder="Description Of The Course"><?php echo $course['description']; ?></textarea>
+                                                                    <small class="err-msg description"></small>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row mt-3">
-                                                            <div class="col-12">
-                                                                <label for="image">Course Image</label>
-                                                                <input class="form-control" type="file" id="image" name="image">
-                                                                <small class="err-msg image"></small>
+                                                            <div class="row mt-3">
+                                                                <div class="col-12">
+                                                                    <label for="image">Course Image</label>
+                                                                    <input class="form-control" type="file" id="image" name="image">
+                                                                    <small class="err-msg image"></small>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="gap-2 d-grid mt-3">
-                                                            <button class="btn btn-success" name="edit_course">Add</button>
-                                                        </div>
-                                                    </form>
-                                                    <script>
-                                                        const form = document.getElementById("edit-course");
-                                                        form.onsubmit = function(e) {
+                                                            <div class="gap-2 d-grid mt-3">
+                                                                <button class="btn btn-success" name="edit_course">Add</button>
+                                                            </div>
+                                                        </form>
+                                                        <script>
+                                                            const form = document.getElementById("edit-course");
+                                                            form.onsubmit = function(e) {
 
-                                                            // validate inputs
-                                                            let grade = form.querySelector("select#grade"),
-                                                                teacher = form.querySelector("select#teacher"),
-                                                                title = form.querySelector("input#title"),
-                                                                description = form.querySelector("textarea#description");
+                                                                // validate inputs
+                                                                let grade = form.querySelector("select#grade"),
+                                                                    teacher = form.querySelector("select#teacher"),
+                                                                    title = form.querySelector("input#title"),
+                                                                    description = form.querySelector("textarea#description");
 
-                                                            if (grade.value === "NULL") {
-                                                                e.preventDefault();
-                                                                grade.focus();
-                                                                grade.classList.add("input-alert");
-                                                                form.querySelector("small.grade").textContent = 'Choose The Grade Of The Course';
-                                                            } else {
-                                                                grade.classList.remove("input-alert");
-                                                                form.querySelector("small.grade").textContent = '';
-
-                                                                if (teacher.value === "NULL") {
+                                                                if (grade.value === "NULL") {
                                                                     e.preventDefault();
-                                                                    teacher.focus();
-                                                                    teacher.classList.add("input-alert");
-                                                                    form.querySelector("small.teacher").textContent = 'Choose The Teacher Of The Course';
+                                                                    grade.focus();
+                                                                    grade.classList.add("input-alert");
+                                                                    form.querySelector("small.grade").textContent = 'Choose The Grade Of The Course';
                                                                 } else {
-                                                                    teacher.classList.remove("input-alert");
-                                                                    form.querySelector("small.teacher").textContent = '';
+                                                                    grade.classList.remove("input-alert");
+                                                                    form.querySelector("small.grade").textContent = '';
 
-                                                                    if (title.value.match(/^(.){4,}$/g) === null) {
+                                                                    if (teacher.value === "NULL") {
                                                                         e.preventDefault();
-                                                                        title.focus();
-                                                                        title.classList.add("input-alert");
-                                                                        form.querySelector("small.title").textContent = 'Title Of The Course Must Contain 4 Charachters At Least';
+                                                                        teacher.focus();
+                                                                        teacher.classList.add("input-alert");
+                                                                        form.querySelector("small.teacher").textContent = 'Choose The Teacher Of The Course';
                                                                     } else {
-                                                                        title.classList.remove("input-alert");
-                                                                        form.querySelector("small.title").textContent = '';
+                                                                        teacher.classList.remove("input-alert");
+                                                                        form.querySelector("small.teacher").textContent = '';
 
-                                                                        if (description.value.match(/(.){8,}/g) === null) {
+                                                                        if (title.value.match(/^(.){4,}$/g) === null) {
                                                                             e.preventDefault();
-                                                                            description.focus();
-                                                                            description.classList.add("input-alert");
-                                                                            form.querySelector("small.description").textContent = 'Description Of The Course Must Contain 8 Charachters At Least';
+                                                                            title.focus();
+                                                                            title.classList.add("input-alert");
+                                                                            form.querySelector("small.title").textContent = 'Title Of The Course Must Contain 4 Charachters At Least';
                                                                         } else {
-                                                                            description.classList.remove("input-alert");
-                                                                            form.querySelector("small.description").textContent = '';
+                                                                            title.classList.remove("input-alert");
+                                                                            form.querySelector("small.title").textContent = '';
+
+                                                                            if (description.value.match(/(.){8,}/g) === null) {
+                                                                                e.preventDefault();
+                                                                                description.focus();
+                                                                                description.classList.add("input-alert");
+                                                                                form.querySelector("small.description").textContent = 'Description Of The Course Must Contain 8 Charachters At Least';
+                                                                            } else {
+                                                                                description.classList.remove("input-alert");
+                                                                                form.querySelector("small.description").textContent = '';
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
-                                                            }
 
-                                                        }
-                                                    </script>
+                                                            }
+                                                        </script>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            <?php
+                                <?php
 
-                            } else { // not found
-                            ?>
-                                <div class="alert alert-danger">Check Your Link And Try Again, Course Is Not Found</div>
-                            <?php
+                                } else { // not found
+                                ?>
+                                    <div class="alert alert-danger">Check Your Link And Try Again, Course Is Not Found</div>
+                                <?php
+                                }
+                            } else {
+                                ?>
+                                <div class="alert alert-danger">Check Your Link And Try Again, Error In Id</div>
+                        <?php
                             }
-                        } else {
-                            ?>
-                            <div class="alert alert-danger">Check Your Link And Try Again, Error In Id</div>
-                    <?php
                         }
-                    }
 
-                    ?>
-                    <h6 class="main">All Courses</h6>
-                    <table class="table table-striped text-center mb-0">
-                        <thead>
-                            <tr>
-                                <td>#ID</td>
-                                <td>Teacher</td>
-                                <td>Title</td>
-                                <td>Grade</td>
-                                <td>Date</td>
-                                <td>Options</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $courses = getCourses($_GET['limit'], $_GET['order']);
-                            if ($courses !== 0) { // not empty result
+                        ?>
+                        <h6 class="main">All Courses</h6>
+                        <table class="table table-striped text-center mb-0">
+                            <thead>
+                                <tr>
+                                    <td>#ID</td>
+                                    <td>Teacher</td>
+                                    <td>Title</td>
+                                    <td>Grade</td>
+                                    <td>Date</td>
+                                    <td>Options</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $courses = getCourses($_GET['limit'], $_GET['order']);
+                                if ($courses !== 0) { // not empty result
 
-                                // loop on result
-                                foreach ($courses as $course) {
-                            ?>
+                                    // loop on result
+                                    foreach ($courses as $course) {
+                                ?>
+                                        <tr>
+                                            <td><?php echo $course['id']; ?></td>
+                                            <td class="i-con">
+                                                <?php echo getTeacherName($course['teacher'])['name']; ?>
+                                                <div class="td-content position-absolute bg-white rounded border py-2 ps-2 pe-5">
+                                                    <?php echo 'Teacher Of: ' . getSubName(getTeacherName($course['teacher'])['subject']); ?>
+                                                </div>
+                                            </td>
+                                            <td class="i-con">
+                                                <?php echo $course['title']; ?>
+                                                <div class="td-content position-absolute bg-white rounded border py-2 ps-2 pe-5">
+                                                    <?php echo nl2br($course['description']); ?>
+                                                </div>
+                                            </td>
+                                            <td><?php echo $course['grade']; ?></td>
+                                            <td><?php echo $course['date']; ?></td>
+                                            <td>
+                                                <a href="<?php echo $_SERVER['PHP_SELF'] . '?page=' . $_GET['page'] . '&limit=' . $_GET['limit'] . '&order=' . $_GET['order'] . '&edit=' . $course['id']; ?>">
+                                                    <i class="fas fa-edit text-success me-1" title="Edit"></i>
+                                                </a>
+                                                <i class="fas fa-trash text-danger delete-course" data-id="<?php echo $course['id']; ?>" title="Delete"></i>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                    }
+
+                                    ?>
+                                    <script>
+                                        const btns = document.querySelectorAll("i.delete-course");
+
+                                        for (let i = 0; i < btns.length; i++) {
+                                            btns[i].onclick = function() {
+                                                var deleteObj = new XMLHttpRequest();
+                                                deleteObj.open("POST", "<?php echo $_SERVER['PHP_SELF'] . '?page=' . $_GET['page'] . '&limit=' . $_GET['limit'] . '&order=' . $_GET['order']; ?>");
+                                                deleteObj.onload = function() {
+                                                    if (this.readyState === 4 && this.status === 200) {
+                                                        location.reload();
+                                                    } else {
+                                                        alert("Unexpected Error Has Happened");
+                                                    }
+                                                }
+                                                deleteObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                                deleteObj.send("delete_id=" + this.dataset.id);
+                                            }
+                                        }
+                                    </script>
+                                <?php
+
+                                } else { // empty result
+                                ?>
                                     <tr>
-                                        <td><?php echo $course['id']; ?></td>
-                                        <td class="i-con">
-                                            <?php echo getTeacherName($course['teacher'])['name']; ?>
-                                            <div class="td-content position-absolute bg-white rounded border py-2 ps-2 pe-5">
-                                                <?php echo 'Teacher Of: ' . getSubName(getTeacherName($course['teacher'])['subject']); ?>
-                                            </div>
-                                        </td>
-                                        <td class="i-con">
-                                            <?php echo $course['title']; ?>
-                                            <div class="td-content position-absolute bg-white rounded border py-2 ps-2 pe-5">
-                                                <?php echo nl2br($course['description']); ?>
-                                            </div>
-                                        </td>
-                                        <td><?php echo $course['grade']; ?></td>
-                                        <td><?php echo $course['date']; ?></td>
-                                        <td>
-                                            <a href="<?php echo $_SERVER['PHP_SELF'] . '?page=' . $_GET['page'] . '&limit=' . $_GET['limit'] . '&order=' . $_GET['order'] . '&edit=' . $course['id']; ?>">
-                                                <i class="fas fa-edit text-success me-1" title="Edit"></i>
-                                            </a>
-                                            <i class="fas fa-trash text-danger delete-course" data-id="<?php echo $course['id']; ?>" title="Delete"></i>
+                                        <td colspan="6">
+                                            <div class="alert alert-info mb-0">There Is No Courses Yet</div>
                                         </td>
                                     </tr>
                                 <?php
                                 }
-
                                 ?>
-                                <script>
-                                    const btns = document.querySelectorAll("i.delete-course");
-
-                                    for (let i = 0; i < btns.length; i++) {
-                                        btns[i].onclick = function() {
-                                            var deleteObj = new XMLHttpRequest();
-                                            deleteObj.open("POST", "<?php echo $_SERVER['PHP_SELF'] . '?page=' . $_GET['page'] . '&limit=' . $_GET['limit'] . '&order=' . $_GET['order']; ?>");
-                                            deleteObj.onload = function() {
-                                                if (this.readyState === 4 && this.status === 200) {
-                                                    location.reload();
-                                                } else {
-                                                    alert("Unexpected Error Has Happened");
-                                                }
-                                            }
-                                            deleteObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                                            deleteObj.send("delete_id=" + this.dataset.id);
-                                        }
-                                    }
-                                </script>
-                            <?php
-
-                            } else { // empty result
-                            ?>
-                                <tr>
-                                    <td colspan="6">
-                                        <div class="alert alert-info mb-0">There Is No Courses Yet</div>
-                                    </td>
-                                </tr>
-                            <?php
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                <?php
-
-                } else if ($_GET['page'] === 'add_course') { // add course page
-
-                    // handling post requests
-                    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                        if (array_key_exists("add_course", $_POST)) { // add course request
-                            addCourse();
-                        }
+                            </tbody>
+                        </table>
+                    <?php
+                    }else{
+                        header('location:index.php');
                     }
+                } else if ($_GET['page'] === 'add_course') { // add course page
+                    if (getAdmin()['position'] == 1) {
 
-                ?>
-                    <h6 class="main">Add Course</h6>
-                    <form action="<?php echo $_SERVER['PHP_SELF'] . '?page=' . $_GET['page']; ?>" method="post" id="add-course" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col-md-6 col-12 mb-3 mb-md-0">
-                                <label for="grade">Grade</label>
-                                <select name="grade" id="grade" class="form-select">
-                                    <option value="NULL" disabled selected>Choose One</option>
-                                    <option value="7">Grade 7</option>
-                                    <option value="8">Grade 8</option>
-                                    <option value="9">Grade 9</option>
-                                </select>
-                                <small class="err-msg grade"></small>
-                            </div>
-                            <div class="col-md-6 col-12 mb-3 mb-md-0">
-                                <label for="teacher">Teacher</label>
-                                <select name="teacher" id="teacher" class="form-select">
-                                    <option value="NULL" disabled selected>Choose One</option>
-                                    <?php
-                                    $teachers = getTeachers();
-                                    if ($teachers !== 0) { // not empty result
+                        // handling post requests
+                        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                            if (array_key_exists("add_course", $_POST)) { // add course request
+                                addCourse();
+                            }
+                        }
 
-                                        // loop in result
-                                        foreach ($teachers as $teacher) {
-                                    ?>
-                                            <option value="<?php echo $teacher['id']; ?>"><?php echo $teacher['name']; ?></option>
-                                    <?php
+                    ?>
+                        <h6 class="main">Add Course</h6>
+                        <form action="<?php echo $_SERVER['PHP_SELF'] . '?page=' . $_GET['page']; ?>" method="post" id="add-course" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-6 col-12 mb-3 mb-md-0">
+                                    <label for="grade">Grade</label>
+                                    <select name="grade" id="grade" class="form-select">
+                                        <option value="NULL" disabled selected>Choose One</option>
+                                        <option value="7">Grade 7</option>
+                                        <option value="8">Grade 8</option>
+                                        <option value="9">Grade 9</option>
+                                    </select>
+                                    <small class="err-msg grade"></small>
+                                </div>
+                                <div class="col-md-6 col-12 mb-3 mb-md-0">
+                                    <label for="teacher">Teacher</label>
+                                    <select name="teacher" id="teacher" class="form-select">
+                                        <option value="NULL" disabled selected>Choose One</option>
+                                        <?php
+                                        $teachers = getTeachers();
+                                        if ($teachers !== 0) { // not empty result
+
+                                            // loop in result
+                                            foreach ($teachers as $teacher) {
+                                        ?>
+                                                <option value="<?php echo $teacher['id']; ?>"><?php echo $teacher['name']; ?></option>
+                                        <?php
+                                            }
                                         }
-                                    }
-                                    ?>
-                                </select>
-                                <small class="err-msg teacher"></small>
+                                        ?>
+                                    </select>
+                                    <small class="err-msg teacher"></small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label for="title">Title</label>
-                                <input type="text" name="title" placeholder="Title Of The Course" id="title" class="form-control" autocomplete="off">
-                                <small class="err-msg title"></small>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <label for="title">Title</label>
+                                    <input type="text" name="title" placeholder="Title Of The Course" id="title" class="form-control" autocomplete="off">
+                                    <small class="err-msg title"></small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label for="description">Description</label>
-                                <textarea name="description" id="description" cols="30" rows="5" class="form-control" placeholder="Description Of The Course"></textarea>
-                                <small class="err-msg description"></small>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <label for="description">Description</label>
+                                    <textarea name="description" id="description" cols="30" rows="5" class="form-control" placeholder="Description Of The Course"></textarea>
+                                    <small class="err-msg description"></small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <label for="image">Course Image</label>
-                                <input class="form-control" type="file" id="image" name="image">
-                                <small class="err-msg image"></small>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <label for="image">Course Image</label>
+                                    <input class="form-control" type="file" id="image" name="image">
+                                    <small class="err-msg image"></small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="gap-2 d-grid mt-3">
-                            <button class="btn btn-success" name="add_course">Add</button>
-                        </div>
-                    </form>
-                    <script>
-                        const form = document.getElementById("add-course");
-                        form.onsubmit = function(e) {
+                            <div class="gap-2 d-grid mt-3">
+                                <button class="btn btn-success" name="add_course">Add</button>
+                            </div>
+                        </form>
+                        <script>
+                            const form = document.getElementById("add-course");
+                            form.onsubmit = function(e) {
 
-                            // validate inputs
-                            let grade = form.querySelector("select#grade"),
-                                teacher = form.querySelector("select#teacher"),
-                                title = form.querySelector("input#title"),
-                                description = form.querySelector("textarea#description"),
-                                image = form.querySelector("input#image");
+                                // validate inputs
+                                let grade = form.querySelector("select#grade"),
+                                    teacher = form.querySelector("select#teacher"),
+                                    title = form.querySelector("input#title"),
+                                    description = form.querySelector("textarea#description"),
+                                    image = form.querySelector("input#image");
 
-                            if (grade.value === "NULL") {
-                                e.preventDefault();
-                                grade.focus();
-                                grade.classList.add("input-alert");
-                                form.querySelector("small.grade").textContent = 'Choose The Grade Of The Course';
-                            } else {
-                                grade.classList.remove("input-alert");
-                                form.querySelector("small.grade").textContent = '';
-
-                                if (teacher.value === "NULL") {
+                                if (grade.value === "NULL") {
                                     e.preventDefault();
-                                    teacher.focus();
-                                    teacher.classList.add("input-alert");
-                                    form.querySelector("small.teacher").textContent = 'Choose The Teacher Of The Course';
+                                    grade.focus();
+                                    grade.classList.add("input-alert");
+                                    form.querySelector("small.grade").textContent = 'Choose The Grade Of The Course';
                                 } else {
-                                    teacher.classList.remove("input-alert");
-                                    form.querySelector("small.teacher").textContent = '';
+                                    grade.classList.remove("input-alert");
+                                    form.querySelector("small.grade").textContent = '';
 
-                                    if (title.value.match(/^(.){4,}$/g) === null) {
+                                    if (teacher.value === "NULL") {
                                         e.preventDefault();
-                                        title.focus();
-                                        title.classList.add("input-alert");
-                                        form.querySelector("small.title").textContent = 'Title Of The Course Must Contain 4 Charachters At Least';
+                                        teacher.focus();
+                                        teacher.classList.add("input-alert");
+                                        form.querySelector("small.teacher").textContent = 'Choose The Teacher Of The Course';
                                     } else {
-                                        title.classList.remove("input-alert");
-                                        form.querySelector("small.title").textContent = '';
+                                        teacher.classList.remove("input-alert");
+                                        form.querySelector("small.teacher").textContent = '';
 
-                                        if (description.value.match(/(.){8,}/g) === null) {
+                                        if (title.value.match(/^(.){4,}$/g) === null) {
                                             e.preventDefault();
-                                            description.focus();
-                                            description.classList.add("input-alert");
-                                            form.querySelector("small.description").textContent = 'Description Of The Course Must Contain 8 Charachters At Least';
+                                            title.focus();
+                                            title.classList.add("input-alert");
+                                            form.querySelector("small.title").textContent = 'Title Of The Course Must Contain 4 Charachters At Least';
                                         } else {
-                                            description.classList.remove("input-alert");
-                                            form.querySelector("small.description").textContent = '';
+                                            title.classList.remove("input-alert");
+                                            form.querySelector("small.title").textContent = '';
 
-                                            if (image.value === "") {
+                                            if (description.value.match(/(.){8,}/g) === null) {
                                                 e.preventDefault();
-                                                image.focus();
-                                                image.classList.add("input-alert");
-                                                form.querySelector("small.image").textContent = 'You Must Choose Image For The Course';
+                                                description.focus();
+                                                description.classList.add("input-alert");
+                                                form.querySelector("small.description").textContent = 'Description Of The Course Must Contain 8 Charachters At Least';
                                             } else {
-                                                image.classList.remove("input-alert");
-                                                form.querySelector("small.image").textContent = '';
+                                                description.classList.remove("input-alert");
+                                                form.querySelector("small.description").textContent = '';
+
+                                                if (image.value === "") {
+                                                    e.preventDefault();
+                                                    image.focus();
+                                                    image.classList.add("input-alert");
+                                                    form.querySelector("small.image").textContent = 'You Must Choose Image For The Course';
+                                                } else {
+                                                    image.classList.remove("input-alert");
+                                                    form.querySelector("small.image").textContent = '';
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
 
-                        }
-                    </script>
-                    <?php
+                            }
+                        </script>
+                        <?php
+                    }else{
+                        header('location:index.php');
+                    }
                 } else if ($_GET['page'] === 'courses_videos') { // courses videos page
 
                     // handling post requests
@@ -946,7 +959,7 @@ function getVideo($video)
                         if (is_numeric($_GET['edit'])) {
                             $video = getVideo($_GET['edit']);
                             if ($video != 0) {
-                    ?>
+                        ?>
                                 <div class="full-page">
                                     <div class="container">
                                         <div class="row">
@@ -1102,11 +1115,11 @@ function getVideo($video)
                                         <td><?php echo courseName($video['course']); ?></td>
                                         <td>
                                             <small>
-                                                <i data-id="<?php echo $video['id'];?>" class="fas fa-trash delete-video text-danger" title="Delete"></i>
+                                                <i data-id="<?php echo $video['id']; ?>" class="fas fa-trash delete-video text-danger" title="Delete"></i>
                                                 <a href="<?php echo $_SERVER['PHP_SELF'] . '?page=' . $_GET['page'] . '&limit=' . $_GET['limit'] . '&order=' . $_GET['order'] . '&edit=' . $video['id']; ?>">
                                                     <i class="fas fa-edit text-success mx-1" title="Edit"></i>
                                                 </a>
-                                                <a href="<?php echo $video['link'];?>" target="_blank">
+                                                <a href="<?php echo $video['link']; ?>" target="_blank">
                                                     <i data-video="<?php echo $video['link']; ?>" class="cursor-pointer show-video fas fa-eye text-info" title="Show"></i>
                                                 </a>
                                             </small>
