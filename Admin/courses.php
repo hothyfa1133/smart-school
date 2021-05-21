@@ -357,6 +357,23 @@ function getCoursesInfo()
     }
 }
 
+// get courss by teacher
+function getCoursesByTeacher()
+{
+    global $conn;
+
+    // get courses by teacher
+    $getCourses = $conn->prepare('SELECT
+    id, title
+    FROM
+    courses
+    WHERE
+    teacher = ?');
+    $getCourses->execute([$_SESSION['smart_school_id']]);
+
+    return $getCourses->fetchAll();
+}
+
 // function to add video
 function addVideo()
 {
@@ -797,7 +814,7 @@ function getVideo($video)
                             </tbody>
                         </table>
                     <?php
-                    }else{
+                    } else {
                         header('location:index.php');
                     }
                 } else if ($_GET['page'] === 'add_course') { // add course page
@@ -933,7 +950,7 @@ function getVideo($video)
                             }
                         </script>
                         <?php
-                    }else{
+                    } else {
                         header('location:index.php');
                     }
                 } else if ($_GET['page'] === 'courses_videos') { // courses videos page
@@ -1184,9 +1201,17 @@ function getVideo($video)
                                         <select name="course" id="course" class="form-select">
                                             <option value="NULL">Choose Course</option>
                                             <?php
-                                            if (getCoursesInfo() !== 0) {
+                                            if (getAdmin()['position'] == 1) {
                                                 foreach (getCoursesInfo() as $course) {
                                             ?>
+                                                    <option value="<?php echo $course['id']; ?>">
+                                                        <?php echo $course['title']; ?>
+                                                    </option>
+                                                <?php
+                                                }
+                                            } else {
+                                                foreach (getCoursesByTeacher() as $course) {
+                                                ?>
                                                     <option value="<?php echo $course['id']; ?>">
                                                         <?php echo $course['title']; ?>
                                                     </option>
