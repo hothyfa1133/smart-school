@@ -548,7 +548,7 @@ function updateStudent () {
                     <div class="row mt-3">
                         <div class="col-md-6 col-12 mb-3 mb-md-0">
                             <label for="student_id">Student Id</label>
-                            <input type="number" name="student_id" id="student_id" placeholder="Student Id" class="form-control" value="<?php echo $student['student_id'];?>">
+                            <input type="number" name="student_id" id="student_id" placeholder="Student Id" class="form-control" value="<?php echo $student['student_id'];?>"disabled>
                             <small class="err-msg id"></small>
                         </div>
                         <div class="col-md-6 col-12 mb-3 mb-md-0">
